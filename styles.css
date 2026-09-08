@@ -175,9 +175,14 @@
     width: 60%; height: 60%; border: 0.5px solid rgba(201,169,110,0.3);
     pointer-events: none;
   }
-  .about-img-stack { display: flex; flex-direction: column; gap: 4px; }
-  .about-img-stack img { width: 100%; height: auto; display: block; object-fit: initial; cursor: pointer; }
+  .about-img-stack {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 4px; width: 100%; height: min(40vh, 440px); align-self: start;
+  }
+  .about-img-stack img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; cursor: pointer; }
+  .about-img-stack img:first-child { grid-column: 1 / 3; }
   .about-img-stack:hover .mp-zoom-hint { background: rgba(26,26,24,0.75); border-color: rgba(212,197,169,0.55); }
+  #crecimiento .about-grid { margin-top: 2.5rem; }
 
   /* MODELOS / PLAN MAESTRO */
   .modelos-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
@@ -475,8 +480,8 @@
     .about-img { order: -1; }
     .about-img img { height: 28vw; min-height: 110px; }
     .about-img::after { display: none; }
-    .about-img-stack { gap: 3px; }
-    .about-img-stack img { height: auto; min-height: 0; }
+    .about-img-stack { gap: 3px; height: 32vh; min-height: 180px; }
+    .about-img-stack img { height: 100%; min-height: 0; }
     .about-text p { font-size: 11px; line-height: 1.5; margin-bottom: 0.5rem; }
     .about-features { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.6rem; }
     .feature-item { padding: 0.6rem 0.7rem; border-top-width: 1.5px; }
