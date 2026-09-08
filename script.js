@@ -1,13 +1,4 @@
 
-/* ── Tab switching ── */
-function showModelo(idx) {
-  document.querySelectorAll(".modelo-panel").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach((b,i) => b.classList.toggle("active", i === idx));
-  requestAnimationFrame(function() {
-    var t = document.getElementById("modelo-" + idx);
-    if (t) t.classList.add("active");
-  });
-}
 function handleSubmit(e) {
   e.preventDefault();
   document.getElementById("form-msg").style.display = "block";
@@ -15,7 +6,7 @@ function handleSubmit(e) {
 }
 
 /* ── Section scroll engine ── */
-const SECTION_IDS = ['inicio','sobre','modelos','amenidades','galeria','ubicacion','contacto'];
+const SECTION_IDS = ['inicio','sobre','plan-maestro','amenidades','financiamiento','crecimiento','galeria','ubicacion','contacto'];
 const NAV_H = 78;
 let isScrolling = false;
 let currentSection = 0;
@@ -26,7 +17,7 @@ function getSectionTops() {
     const el = document.getElementById(id);
     if (!el) return 0;
     if (i === 0) return 0;
-    if (id === 'modelos') return el.offsetTop; // full viewport, HUD handles nav offset internally
+    if (id === 'plan-maestro') return el.offsetTop; // full viewport, HUD handles nav offset internally
     return el.offsetTop - NAV_H;
   });
 }
@@ -228,7 +219,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 /* ── Mobile: fix section inline styles ── */
 (function(){
-  var sectionIds = ['galeria','ubicacion','contacto'];
+  var sectionIds = ['financiamiento','crecimiento','galeria','ubicacion','contacto'];
   function fixSections() {
     var isMobile = window.innerWidth <= 900;
     sectionIds.forEach(function(id) {

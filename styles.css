@@ -82,6 +82,12 @@
     color: var(--sand); line-height: 1.6; max-width: 480px;
     opacity: 0; animation: fadeUp 0.9s ease 0.9s forwards;
   }
+  .hero-price {
+    margin-top: 1rem; font-size: 14px; font-weight: 400;
+    color: var(--accent-light); letter-spacing: 0.02em;
+    opacity: 0; animation: fadeUp 0.9s ease 1s forwards;
+  }
+  .hero-price strong { font-weight: 500; color: var(--warm-white); }
   .hero-actions {
     margin-top: 2.5rem; display: flex; gap: 1rem; align-items: center;
     opacity: 0; animation: fadeUp 0.9s ease 1.1s forwards;
@@ -159,24 +165,8 @@
     pointer-events: none;
   }
 
-  /* MODELOS */
+  /* MODELOS / PLAN MAESTRO */
   .modelos-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
-  .modelo-tabs {
-    display: flex; gap: 0; margin-top: 1rem;
-  }
-  .tab-btn {
-    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
-    padding: 0.8rem 2rem; background: rgba(212,197,169,0.06);
-    border: 1px solid rgba(212,197,169,0.4);
-    color: var(--sand-light); cursor: pointer; transition: all 0.3s ease;
-    font-family: "Jost"; font-weight: 400;
-  }
-  .tab-btn:hover {
-    background: rgba(212,197,169,0.15);
-    border-color: rgba(212,197,169,0.7);
-    color: var(--warm-white);
-  }
-  .tab-btn.active { background: var(--accent); color: var(--charcoal); border-color: var(--accent); font-weight: 500; box-shadow: 0 0 18px rgba(201,169,110,0.35); }
   .modelo-info {
     padding: 2rem 2.5rem; background: var(--charcoal2);
     display: flex; flex-direction: column; justify-content: center; overflow: hidden;
@@ -194,6 +184,25 @@
     font-size: 1.6rem; font-weight: 300; color: var(--accent);
   }
   .spec-key { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); }
+
+  /* LOTE TIPOS */
+  .lote-tipos {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .lote-tipo {
+    font-size: 12px; color: var(--sand); font-weight: 300;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .lote-tipo strong { color: var(--warm-white); font-weight: 500; }
+  .lote-swatch {
+    width: 10px; height: 10px; flex-shrink: 0; border-radius: 2px;
+    border: 0.5px solid rgba(212,197,169,0.3);
+  }
+  .lote-ambar { background: var(--sand-light); }
+  .lote-coral { background: #E3A98B; }
+  .lote-marfil { background: #C9754F; }
+  .lote-cristal { background: #6E3B26; }
 
   /* AMENIDADES */
   .amenidades { background: var(--charcoal2); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
@@ -242,6 +251,43 @@
     display: flex; gap: 1rem;
   }
   .location-list li span:first-child { color: var(--accent); min-width: 20px; }
+
+  /* FINANCIAMIENTO */
+  .fin-plans {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .fin-plan {
+    padding: 1.1rem 1.2rem; border: 0.5px solid rgba(212,197,169,0.2);
+    border-top: 2px solid var(--accent);
+  }
+  .fin-plan-name {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .fin-plan-desc { font-size: 12px; color: var(--sand); line-height: 1.4; font-weight: 300; margin-bottom: 0.5rem; }
+  .fin-plan-term {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.5rem; font-weight: 300; color: var(--accent);
+  }
+  .fin-table-wrap { margin-top: 1.5rem; overflow-x: auto; }
+  .fin-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .fin-table th, .fin-table td {
+    padding: 0.6rem 0.9rem; text-align: left; white-space: nowrap;
+    border-bottom: 0.5px solid rgba(212,197,169,0.15);
+  }
+  .fin-table thead th {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 400;
+    border-bottom: 1px solid rgba(212,197,169,0.3);
+  }
+  .fin-table tbody td:first-child { color: var(--sand); font-weight: 400; }
+  .fin-table tbody td:not(:first-child) { color: var(--warm-white); font-weight: 300; }
+  .fin-table tbody tr:nth-child(even) { background: rgba(212,197,169,0.04); }
+  .fin-note { font-size: 11px; color: var(--muted); margin-top: 1rem; font-weight: 300; }
+
+  /* CRECIMIENTO */
+  .crecimiento-stats { display: flex; gap: 2.5rem; margin-top: 1.5rem; }
 
   /* GALERÍA */
   .galeria-strip {
@@ -345,8 +391,8 @@
     .feature-num { font-size: 1.3rem; line-height: 1; }
     .feature-desc { font-size: 9px; margin-top: 2px; }
 
-    /* ─ MODELOS: full screen stack ─ */
-    #modelos {
+    /* ─ PLAN MAESTRO: full screen stack ─ */
+    #plan-maestro {
       height: calc(100svh - 62px); max-height: none; overflow: hidden;
       display: flex; flex-direction: column; padding: 0; box-sizing: border-box;
     }
@@ -360,8 +406,6 @@
     .modelos-hud .section-title { font-size: 1.5rem; text-shadow: none; }
     .modelos-hud .section-tag { font-size: 9px; margin-bottom: 0.2rem; }
     .modelos-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0; flex-wrap: wrap; }
-    .modelo-tabs { flex-wrap: nowrap; gap: 0.3rem; pointer-events: all; }
-    .tab-btn { padding: 0.4rem 0.8rem; font-size: 9px; letter-spacing: 0.08em; }
     .modelo-panel.active {
       display: flex !important; flex-direction: column !important;
       flex: 1; min-height: 0; animation: none;
@@ -379,6 +423,8 @@
     .modelo-specs { gap: 0.8rem; margin-bottom: 0.3rem; }
     .spec-val { font-size: 1.1rem; }
     .spec-key { font-size: 9px; }
+    .lote-tipos { gap: 0.3rem 1rem; margin-bottom: 0.4rem; }
+    .lote-tipo { font-size: 9.5px; }
 
     /* ─ AMENIDADES ─ */
     .amenidades { min-height: 0; }
@@ -402,6 +448,22 @@
     .gal-item { overflow: hidden; }
     .gal-item img { height: 26vw; display: block; }
     .gal-item:first-child img { height: 34vw; }
+
+    /* ─ FINANCIAMIENTO ─ */
+    #financiamiento { min-height: 0; padding-top: calc(62px + 0.8rem) !important; padding-bottom: 0.8rem !important; }
+    .fin-plans { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.8rem; }
+    .fin-plan { padding: 0.6rem 0.7rem; }
+    .fin-plan-name { font-size: 9px; margin-bottom: 0.2rem; }
+    .fin-plan-desc { font-size: 9px; margin-bottom: 0.2rem; }
+    .fin-plan-term { font-size: 1.05rem; }
+    .fin-table-wrap { margin-top: 0.7rem; flex: 1; min-height: 0; overflow-y: auto; }
+    .fin-table { font-size: 10px; }
+    .fin-table th, .fin-table td { padding: 0.35rem 0.5rem; }
+    .fin-note { font-size: 9px; margin-top: 0.4rem; }
+
+    /* ─ CRECIMIENTO ─ */
+    #crecimiento { min-height: 0; justify-content: flex-start; padding-top: 1.8rem; }
+    .crecimiento-stats { gap: 1.2rem; margin-top: 0.6rem; }
 
     /* ─ UBICACIÓN ─ */
     #ubicacion { min-height: 0; background: var(--charcoal2); justify-content: flex-start; padding-top: 1.8rem; }
@@ -470,9 +532,6 @@
     background: linear-gradient(to bottom, rgba(14,14,12,0.98) 0%, rgba(14,14,12,0.85) 45%, rgba(14,14,12,0.3) 75%, transparent 100%);
     pointer-events: none;
   }
-  .modelos-hud .modelo-tabs { pointer-events: all; }
-  .modelos-hud .tab-btn { pointer-events: all; }
-
   .modelo-panel { display: none; }
   @keyframes mpFadeIn { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:translateX(0); } }
   .modelo-panel.active { animation: mpFadeIn 0.4s ease forwards; }
@@ -495,6 +554,8 @@
     margin-top: auto;
     align-self: flex-start;
   }
+  .mp-info-full { padding-top: 9rem; justify-content: center; }
+  .mp-info-full .btn-primary { margin-top: 2rem; }
 
   /* ── LIGHTBOX ── */
   #lb-overlay {
@@ -613,4 +674,7 @@
       touch-action: pan-x;
     }
     .nav-cta { display: none; }
+
+    .mp-info-full { padding-top: 0.7rem; justify-content: space-between; }
+    .mp-info-full .btn-primary { margin-top: 0.5rem; }
   }
