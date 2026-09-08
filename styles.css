@@ -169,6 +169,7 @@
     width: 60%; height: 60%; border: 0.5px solid rgba(201,169,110,0.3);
     pointer-events: none;
   }
+  .about-img-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
 
   /* MODELOS / PLAN MAESTRO */
   .modelos-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
@@ -428,6 +429,8 @@
     .about-img { order: -1; }
     .about-img img { height: 28vw; min-height: 110px; }
     .about-img::after { display: none; }
+    .about-img-duo { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .about-img-duo img { height: 28vw; min-height: 110px; }
     .about-text p { font-size: 11px; line-height: 1.5; margin-bottom: 0.5rem; }
     .about-features { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.6rem; }
     .feature-item { padding: 0.6rem 0.7rem; border-top-width: 1.5px; }
