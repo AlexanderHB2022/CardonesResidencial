@@ -294,6 +294,20 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
       });
     }
 
+    var maleconImgs = Array.from(document.querySelectorAll('.about-img-duo img')).map(function (img, i) {
+      return { src: img.src, alt: img.alt || ('Nuevo Malecón ' + (i + 1)) };
+    });
+    document.querySelectorAll('.about-img-duo img').forEach(function (img, i) {
+      img.setAttribute('role', 'button');
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('aria-label', 'Ampliar imagen del Nuevo Malecón');
+      var openMalecon = function () { openWith(maleconImgs, i); };
+      img.addEventListener('click', openMalecon);
+      img.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMalecon(); }
+      });
+    });
+
     document.getElementById('lb-close').onclick = close;
     document.getElementById('lb-prev').onclick = function () { go(cur - 1); };
     document.getElementById('lb-next').onclick = function () { go(cur + 1); };
