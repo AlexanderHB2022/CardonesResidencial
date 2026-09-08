@@ -10,7 +10,11 @@
     --accent: #C9A96E;
     --accent-light: #E8D5B0;
   }
-  html { scroll-behavior: smooth; }
+  /* scroll-behavior intentionally NOT smooth: the section engine in script.js
+     drives all intentional scrolling with its own eased animation. A CSS
+     smooth-scroll here fights window.scrollTo() calls made during that
+     animation and causes the page to settle a few pixels off-target. */
+  html { scroll-behavior: auto; }
   body {
     font-family: "Jost", sans-serif;
     background: var(--charcoal);
@@ -44,6 +48,7 @@
     transition: background 0.3s;
   }
   .nav-cta:hover { background: var(--sand); }
+  .nav-cta.active { background: var(--sand-light); box-shadow: 0 0 0 1px var(--accent); }
 
   /* HERO */
   .hero {
@@ -216,7 +221,8 @@
     transition: border-color 0.3s;
   }
   .amenidad:hover { border-color: var(--accent); }
-  .amenidad-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .amenidad-icon { margin-bottom: 1.1rem; color: var(--accent); }
+  .amenidad-icon svg { width: 30px; height: 30px; }
   .amenidad-name { font-size: 13px; font-weight: 500; color: var(--warm-white); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
   .amenidad-desc { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; }
 
@@ -253,9 +259,19 @@
   .location-list li span:first-child { color: var(--accent); min-width: 20px; }
 
   /* FINANCIAMIENTO */
+  .fin-highlights {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-top: 1.75rem; padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid rgba(212,197,169,0.15);
+  }
+  .fin-highlight-num {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.1rem; font-weight: 300; color: var(--accent); line-height: 1;
+  }
+  .fin-highlight-label { font-size: 11px; letter-spacing: 0.08em; color: var(--muted); margin-top: 4px; text-transform: uppercase; }
   .fin-plans {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
   }
   .fin-plan {
     padding: 1.1rem 1.2rem; border: 0.5px solid rgba(212,197,169,0.2);
@@ -286,6 +302,17 @@
   .fin-table tbody tr:nth-child(even) { background: rgba(212,197,169,0.04); }
   .fin-note { font-size: 11px; color: var(--muted); margin-top: 1rem; font-weight: 300; }
 
+  /* ENTREGA Y CERTEZA JURÍDICA */
+  .entrega-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    margin-top: 3rem;
+  }
+  .entrega-name {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.5rem; font-weight: 300; color: var(--warm-white);
+  }
+  .entrega-item p { font-size: 14px; color: var(--sand); line-height: 1.7; font-weight: 300; }
+
   /* CRECIMIENTO */
   .crecimiento-stats { display: flex; gap: 2.5rem; margin-top: 1.5rem; }
 
@@ -300,6 +327,22 @@
   .gal-item:first-child { grid-row: 1 / 3; }
   .gal-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
   .gal-item:hover img { transform: scale(1.04); }
+  /* Two-image gallery: asymmetric duo, no leftover grid cells */
+  .galeria-strip-2 {
+    grid-template-columns: 1.3fr 1fr; grid-template-rows: 460px;
+  }
+  .galeria-strip-2 .gal-item:first-child { grid-row: 1; }
+
+  /* DESARROLLADO POR */
+  .desarrolladora-block {
+    display: flex; align-items: center; gap: 3rem;
+    margin-top: 2.5rem;
+  }
+  .desarrolladora-logo img { height: 72px; }
+  .desarrolladora-text p {
+    font-size: 14px; color: var(--sand); line-height: 1.7; font-weight: 300;
+    max-width: 480px;
+  }
 
   /* CONTACTO */
   .contacto { background: var(--charcoal2); }
@@ -413,6 +456,8 @@
     }
     .mp-left { width: 100%; flex: 0 0 42%; overflow: hidden; }
     .mp-left img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; background: var(--charcoal2); }
+    .mp-zoom-hint { left: 0.6rem; bottom: 0.6rem; font-size: 8.5px; padding: 0.35rem 0.6rem; gap: 0.35rem; }
+    .mp-zoom-hint svg { width: 10px; height: 10px; }
     .mp-right { width: 100%; flex: 0 0 58%; display: flex; flex-direction: column; }
     .mp-img-top { flex: 0 0 40%; overflow: hidden; }
     .mp-img-top img { width: 100%; height: 100%; object-fit: contain; object-position: center; background: var(--charcoal); }
@@ -430,7 +475,8 @@
     .amenidades { min-height: 0; }
     .amenidades-grid { grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 0.8rem; }
     .amenidad { padding: 0.8rem 0.7rem; border-top-width: 1.5px; }
-    .amenidad-icon { font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .amenidad-icon { margin-bottom: 0.4rem; }
+    .amenidad-icon svg { width: 20px; height: 20px; }
     .amenidad-name { font-size: 10px; margin-bottom: 0.3rem; }
     .amenidad-desc { font-size: 10px; line-height: 1.4; }
 
@@ -449,9 +495,16 @@
     .gal-item img { height: 26vw; display: block; }
     .gal-item:first-child img { height: 34vw; }
 
+    .galeria-strip-2 { grid-template-columns: 1fr; grid-template-rows: auto auto; gap: 3px; }
+    .galeria-strip-2 .gal-item { grid-column: 1; }
+    .galeria-strip-2 .gal-item img { height: 46vw; }
+
     /* ─ FINANCIAMIENTO ─ */
     #financiamiento { min-height: 0; padding-top: calc(62px + 0.8rem) !important; padding-bottom: 0.8rem !important; }
-    .fin-plans { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.8rem; }
+    .fin-highlights { grid-template-columns: repeat(4, 1fr); gap: 0.3rem; margin-top: 0.5rem; padding-bottom: 0.5rem; }
+    .fin-highlight-num { font-size: 1rem; }
+    .fin-highlight-label { font-size: 7px; margin-top: 2px; }
+    .fin-plans { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
     .fin-plan { padding: 0.6rem 0.7rem; }
     .fin-plan-name { font-size: 9px; margin-bottom: 0.2rem; }
     .fin-plan-desc { font-size: 9px; margin-bottom: 0.2rem; }
@@ -461,9 +514,22 @@
     .fin-table th, .fin-table td { padding: 0.35rem 0.5rem; }
     .fin-note { font-size: 9px; margin-top: 0.4rem; }
 
+    /* ─ ENTREGA Y CERTEZA JURÍDICA ─ */
+    #entrega { min-height: 0; }
+    .entrega-grid { grid-template-columns: 1fr; gap: 0.8rem; margin-top: 0.8rem; }
+    .entrega-name { font-size: 1.05rem; }
+    .entrega-item .divider { margin: 0.4rem 0; }
+    .entrega-item p { font-size: 11px; line-height: 1.5; }
+
     /* ─ CRECIMIENTO ─ */
     #crecimiento { min-height: 0; justify-content: flex-start; padding-top: 1.8rem; }
     .crecimiento-stats { gap: 1.2rem; margin-top: 0.6rem; }
+
+    /* ─ DESARROLLADO POR ─ */
+    #desarrolladora { min-height: 0; }
+    .desarrolladora-block { flex-direction: column; text-align: center; gap: 0.8rem; margin-top: 0.8rem; }
+    .desarrolladora-logo img { height: 42px; }
+    .desarrolladora-text p { font-size: 11px; line-height: 1.5; }
 
     /* ─ UBICACIÓN ─ */
     #ubicacion { min-height: 0; background: var(--charcoal2); justify-content: flex-start; padding-top: 1.8rem; }
@@ -519,8 +585,9 @@
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* Offset for fixed nav on anchor links */
-  #sobre, #modelos, #amenidades, #galeria, #ubicacion, #contacto {
+  /* Offset for fixed nav on anchor links (fallback if JS scrolling is unavailable) */
+  #sobre, #plan-maestro, #amenidades, #financiamiento, #entrega, #crecimiento,
+  #galeria, #ubicacion, #desarrolladora, #contacto {
     scroll-margin-top: 78px;
   }
 
@@ -535,10 +602,23 @@
   .modelo-panel { display: none; }
   @keyframes mpFadeIn { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:translateX(0); } }
   .modelo-panel.active { animation: mpFadeIn 0.4s ease forwards; }
-  .modelo-panel.active { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+  .modelo-panel.active { display: grid; grid-template-columns: 38% 62%; height: 100vh; }
 
   .mp-left { overflow: hidden; height: 100vh; }
   .mp-left img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+  .mp-left-compact { position: relative; cursor: pointer; }
+  .mp-zoom-hint {
+    position: absolute; left: 1.25rem; bottom: 1.25rem; z-index: 2;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--sand-light);
+    background: rgba(26,26,24,0.55); backdrop-filter: blur(6px);
+    border: 0.5px solid rgba(212,197,169,0.3);
+    padding: 0.5rem 0.85rem;
+    transition: background 0.25s, border-color 0.25s;
+    pointer-events: none;
+  }
+  .mp-left-compact:hover .mp-zoom-hint { background: rgba(26,26,24,0.75); border-color: rgba(212,197,169,0.55); }
 
   .mp-right { display: grid; grid-template-rows: 1fr 1fr; overflow: hidden; height: 100vh; }
   .mp-img-top { overflow: hidden; }
