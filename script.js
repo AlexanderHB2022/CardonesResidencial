@@ -1,8 +1,57 @@
 
+/* WhatsApp number Cardones already uses in #contacto ("622 172 2222" /
+   tel:6221722222), in wa.me format: country code + digits only. */
+const WHATSAPP_NUMBER = '526221722222';
+
+function buildWhatsAppMessage(data) {
+  var lines = [
+    'Hola, me interesa recibir información sobre Cardones Residencial.',
+    '',
+    'Nombre: ' + data.nombre,
+  ];
+  if (data.telefono) lines.push('Teléfono: ' + data.telefono);
+  lines.push('Correo: ' + data.correo);
+  if (data.lote) lines.push('Tipo de lote de interés: ' + data.lote);
+  if (data.mensaje) {
+    lines.push('');
+    lines.push('Mensaje:');
+    lines.push(data.mensaje);
+  }
+  lines.push('');
+  lines.push('Me gustaría conocer disponibilidad, precios y opciones de financiamiento.');
+  return lines.join('\n');
+}
+
 function handleSubmit(e) {
   e.preventDefault();
-  document.getElementById("form-msg").style.display = "block";
-  e.target.reset();
+  var form = e.target;
+
+  // Use the form's own HTML5 validation (required fields, type="email", etc.)
+  // — if anything required is missing, show the browser's native validation
+  // UI and stop here without opening WhatsApp.
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  var loteSelect = document.getElementById('lote-interes');
+  var data = {
+    nombre: form.querySelector('input[type="text"]').value.trim(),
+    telefono: form.querySelector('input[type="tel"]').value.trim(),
+    correo: form.querySelector('input[type="email"]').value.trim(),
+    lote: loteSelect ? loteSelect.value.trim() : '',
+    mensaje: form.querySelector('textarea').value.trim(),
+  };
+
+  var whatsappUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildWhatsAppMessage(data));
+
+  var msg = document.getElementById('form-msg');
+  msg.textContent = '↗ Abriendo WhatsApp para continuar tu solicitud…';
+  msg.style.display = 'block';
+
+  // Requires no confirmation dialog and doesn't navigate the current page —
+  // the user reviews and sends the message themselves inside WhatsApp.
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
 
 /* Preselect "Tipo de lote de interés" when the user arrives via a
@@ -32,7 +81,7 @@ document.querySelectorAll('[data-preselect-lote]').forEach(function (el) {
    ──────────────────────────────────────────────────────────────── */
 const SECTION_IDS = [
   'inicio', 'sobre', 'plan-maestro', 'amenidades', 'financiamiento',
-  'entrega', 'crecimiento', 'galeria', 'ubicacion', 'desarrolladora', 'contacto'
+  'entrega', 'crecimiento', 'galeria', 'ubicacion', 'contacto'
 ];
 const NAV_H = 78;
 const INERTIA_GRACE_MS = 550;
@@ -113,16 +162,39 @@ function requestSectionStep(dir) {
   scrollToSection(next);
 }
 
+/* The last tracked section (#contacto) is followed by the footer, which is
+   real page content the section-jump engine doesn't know about. At that
+   boundary we hand scrolling back to the browser instead of jamming input:
+   scrolling further down always falls through to native scroll (revealing
+   the footer); scrolling back up falls through too, but only once the user
+   has actually scrolled past the section's snapped top — right at that top,
+   an up gesture still snaps to the previous section like everywhere else. */
+function shouldReleaseToNativeScroll(dir) {
+  const tops = getSectionTops();
+  const lastTop = tops[SECTION_IDS.length - 1];
+  if (lastTop === null) return false;
+  // Tied directly to scrollY vs. the last section's own snapped position —
+  // not to getCurrentSectionIdx(), whose NAV_H lookahead buffer would
+  // otherwise let a fast run of native-scroll ticks drift past the
+  // previous section's boundary before control is reclaimed, causing an
+  // up-gesture to snap two sections back instead of one.
+  if (window.scrollY < lastTop - 2) return false; // above the last section: normal snap rules
+  if (dir > 0) return true; // scrolling further down toward/within the footer
+  return window.scrollY > lastTop + 2; // scrolling up: release only while still below its exact top
+}
+
 /* Wheel: at most one section per gesture. */
 window.addEventListener('wheel', (e) => {
-  e.preventDefault();
-
-  if (isScrolling) return; // an animation is actively driving the scroll
+  if (isScrolling) { e.preventDefault(); return; } // an animation is actively driving the scroll
 
   const deltaY = e.deltaMode === 1 ? e.deltaY * 16 : (e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY);
-  if (Math.abs(deltaY) < 2) return; // ignore sub-pixel / phantom trackpad noise
+  if (Math.abs(deltaY) < 2) { e.preventDefault(); return; } // ignore sub-pixel / phantom trackpad noise
 
   const dir = deltaY > 0 ? 1 : -1;
+
+  if (shouldReleaseToNativeScroll(dir)) return; // let the browser scroll to/from the footer
+
+  e.preventDefault();
   const now = performance.now();
 
   if (now < inertiaGraceUntil && dir === lastGestureDir) {
@@ -158,6 +230,11 @@ window.addEventListener('touchmove', (e) => {
     if (Math.abs(dy) < 10 && Math.abs(dx) < 10) return; // not enough movement to classify yet
     touchIntercepted = Math.abs(dy) > Math.abs(dx); // vertical gesture: we own it
     if (!touchIntercepted) return; // horizontal gesture: leave it to native behavior
+  }
+  const dyPartial = touchStartY - t.clientY;
+  if (shouldReleaseToNativeScroll(dyPartial > 0 ? 1 : -1)) {
+    touchActive = false; // hand this gesture to native scroll (footer area)
+    return;
   }
   e.preventDefault(); // vertical page swipe: prevent native scroll fighting our jump
 }, { passive: false });
@@ -323,7 +400,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 /* ── Mobile: fix section inline styles ── */
 (function () {
-  var sectionIds = ['financiamiento', 'entrega', 'crecimiento', 'galeria', 'ubicacion', 'desarrolladora', 'contacto'];
+  var sectionIds = ['financiamiento', 'entrega', 'crecimiento', 'galeria', 'ubicacion', 'contacto'];
   function fixSections() {
     var isMobile = window.innerWidth <= 900;
     sectionIds.forEach(function (id) {

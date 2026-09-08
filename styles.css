@@ -369,17 +369,6 @@
   }
   .galeria-strip-2 .gal-item:first-child { grid-row: 1; }
 
-  /* DESARROLLADO POR */
-  .desarrolladora-block {
-    display: flex; align-items: center; gap: 3rem;
-    margin-top: 2.5rem;
-  }
-  .desarrolladora-logo img { height: 72px; }
-  .desarrolladora-text p {
-    font-size: 14px; color: var(--sand); line-height: 1.7; font-weight: 300;
-    max-width: 480px;
-  }
-
   /* CONTACTO */
   .contacto { background: var(--charcoal2); }
   .contacto-grid {
@@ -408,12 +397,34 @@
   .form-group select option { background: var(--charcoal2); }
 
   /* FOOTER */
-  footer {
-    padding: 3rem; display: flex; justify-content: space-between; align-items: center;
+  .site-footer {
+    background: var(--charcoal2);
     border-top: 0.5px solid rgba(212,197,169,0.15);
+    padding: 3.5rem max(3rem, calc((100vw - 1200px)/2)) 2rem;
+  }
+  .footer-top {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 2rem 3rem;
+    padding-bottom: 2rem;
+  }
+  .footer-brand img { height: 40px; }
+  .footer-nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.6rem; }
+  .footer-nav a {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--sand); text-decoration: none; font-weight: 300;
+    transition: color 0.25s;
+  }
+  .footer-nav a:hover, .footer-nav a:focus-visible { color: var(--accent); }
+  .footer-dev { display: flex; align-items: center; gap: 0.85rem; }
+  .footer-dev-label {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .footer-dev-logo { height: 30px; width: auto; object-fit: contain; }
+  .footer-bottom {
+    border-top: 0.5px solid rgba(212,197,169,0.12);
+    padding-top: 1.5rem;
   }
   .footer-copy { font-size: 11px; color: var(--muted); font-weight: 300; }
-  .footer-logo img { height: 36px; opacity: 0.7; }
 
   /* DIVIDER */
   .divider {
@@ -544,12 +555,6 @@
     #crecimiento { min-height: 0; justify-content: flex-start; padding-top: 1.8rem; }
     .crecimiento-stats { gap: 1.2rem; margin-top: 0.6rem; }
 
-    /* ─ DESARROLLADO POR ─ */
-    #desarrolladora { min-height: 0; }
-    .desarrolladora-block { flex-direction: column; text-align: center; gap: 0.8rem; margin-top: 0.8rem; }
-    .desarrolladora-logo img { height: 42px; }
-    .desarrolladora-text p { font-size: 11px; line-height: 1.5; }
-
     /* ─ UBICACIÓN ─ */
     #ubicacion { min-height: 0; background: var(--charcoal2); justify-content: flex-start; padding-top: 1.8rem; }
     .ubicacion-grid { grid-template-columns: 1fr; gap: 0.8rem; display: grid; }
@@ -571,8 +576,14 @@
     .contacto-form .btn-primary { padding: 0.65rem 1.4rem; font-size: 10px; margin-top: 0.3rem; }
 
     /* ─ FOOTER ─ */
-    footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1rem 1.2rem; }
-    footer img { height: 28px; }
+    .site-footer { padding: 2.2rem 1.2rem 1.5rem; }
+    .footer-top { flex-direction: column; align-items: flex-start; gap: 1.4rem; padding-bottom: 1.4rem; }
+    .footer-brand img { height: 34px; }
+    .footer-nav { flex-direction: column; gap: 0.7rem; }
+    .footer-nav a { font-size: 10px; }
+    .footer-dev { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .footer-dev-logo { height: 26px; }
+    .footer-bottom { padding-top: 1.2rem; }
     .footer-copy { font-size: 9px; }
 
     /* ─ LIGHTBOX ─ */
@@ -606,7 +617,7 @@
 
   /* Offset for fixed nav on anchor links (fallback if JS scrolling is unavailable) */
   #sobre, #plan-maestro, #amenidades, #financiamiento, #entrega, #crecimiento,
-  #galeria, #ubicacion, #desarrolladora, #contacto {
+  #galeria, #ubicacion, #contacto {
     scroll-margin-top: 78px;
   }
 
