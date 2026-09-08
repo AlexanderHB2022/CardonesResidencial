@@ -46,7 +46,6 @@ function getSectionTops() {
     const el = document.getElementById(id);
     if (!el) return null;
     if (i === 0) return 0;
-    if (id === 'plan-maestro') return el.offsetTop; // full viewport, HUD handles nav offset internally
     return el.offsetTop - NAV_H;
   });
 }
@@ -281,8 +280,8 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
       item.onclick = function () { openWith(galleryImgs, i); };
     });
 
-    var pmImg = document.querySelector('.mp-left img');
-    var pmTrigger = document.querySelector('.mp-left');
+    var pmImg = document.querySelector('.plan-maestro-card img');
+    var pmTrigger = document.querySelector('.plan-maestro-card');
     if (pmImg && pmTrigger) {
       pmTrigger.setAttribute('role', 'button');
       pmTrigger.setAttribute('tabindex', '0');
@@ -321,31 +320,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
   document.addEventListener('DOMContentLoaded', init);
 })();
-
-/* ── Mobile: remove modelos fixed height ── */
-(function () {
-  function fixModelos() {
-    var el = document.querySelector('.modelos-section');
-    if (!el) return;
-    if (window.innerWidth <= 900) {
-      el.style.height = 'calc(100svh - 62px)';
-      el.style.maxHeight = 'none';
-      el.style.overflow = 'hidden';
-      el.style.display = 'flex';
-      el.style.flexDirection = 'column';
-      el.style.position = 'relative';
-    } else {
-      el.style.height = '100vh';
-      el.style.maxHeight = '100vh';
-      el.style.overflow = 'hidden';
-      el.style.display = 'flex';
-      el.style.position = 'relative';
-    }
-  }
-  fixModelos();
-  window.addEventListener('resize', fixModelos);
-})();
-
 
 /* ── Mobile: fix section inline styles ── */
 (function () {
