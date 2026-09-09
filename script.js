@@ -183,8 +183,21 @@ function shouldReleaseToNativeScroll(dir) {
   return window.scrollY > lastTop + 2; // scrolling up: release only while still below its exact top
 }
 
-/* Wheel: at most one section per gesture. */
+/* The one-section-per-gesture engine (wheel + touch interception below) is
+   desktop-only. On mobile (<=900px) it fought natural page scroll: fixed
+   section heights + preventDefault on every wheel/touch tick produced the
+   reported lag, the dead zone where scroll stopped responding, and content
+   that couldn't be reached below the fold. Below that width we let the
+   browser handle scrolling entirely — nav-link clicks still smooth-scroll
+   via scrollToSection(), and updateActiveNav()/reveal animations still run
+   off the native 'scroll' event. */
+function isMobileViewport() {
+  return window.innerWidth <= 900;
+}
+
+/* Wheel: at most one section per gesture (desktop only). */
 window.addEventListener('wheel', (e) => {
+  if (isMobileViewport()) return; // let the browser scroll natively
   if (isScrolling) { e.preventDefault(); return; } // an animation is actively driving the scroll
 
   const deltaY = e.deltaMode === 1 ? e.deltaY * 16 : (e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY);
@@ -208,12 +221,16 @@ window.addEventListener('wheel', (e) => {
   requestSectionStep(dir);
 }, { passive: false });
 
-/* Touch swipe: same one-gesture-one-section contract, without hijacking
-   scroll/tap inside elements that need their own touch behavior. */
+/* Touch swipe: same one-gesture-one-section contract on desktop-sized
+   touchscreens only, without hijacking scroll/tap inside elements that
+   need their own touch behavior. On mobile viewports touchmove/touchend
+   never call preventDefault or read layout, so touch scrolling stays
+   native and cheap. */
 const TOUCH_EXCLUDE_SELECTOR = 'input, select, textarea, button, a, .fin-table-wrap, .nav-links, #lb-overlay';
 let touchStartX = 0, touchStartY = 0, touchActive = false, touchIntercepted = false;
 
 window.addEventListener('touchstart', (e) => {
+  if (isMobileViewport()) { touchActive = false; return; }
   const t = e.touches[0];
   touchStartX = t.clientX;
   touchStartY = t.clientY;
@@ -261,9 +278,28 @@ document.querySelectorAll('.nav-links a, a[href^="#"]').forEach(a => {
 });
 
 /* Active nav highlight */
+let lastActiveNavId = null;
+function centerNavLinkHorizontally(link) {
+  // Moves only the nav's own horizontal scroll position (scrollLeft) so the
+  // active link stays visible — never touches the page's vertical scroll,
+  // unlike Element.scrollIntoView(), which can nudge ancestor scroll
+  // containers on both axes even with block:'nearest'.
+  const container = link.closest('.nav-links');
+  if (!container) return;
+  const cRect = container.getBoundingClientRect();
+  const lRect = link.getBoundingClientRect();
+  const delta = (lRect.left + lRect.width / 2) - (cRect.left + cRect.width / 2);
+  if (Math.abs(delta) < 1) return;
+  container.scrollTo({ left: container.scrollLeft + delta, behavior: 'smooth' });
+}
+
 function updateActiveNav() {
   const idx = getCurrentSectionIdx();
   const activeId = SECTION_IDS[idx];
+  currentSection = idx;
+  if (activeId === lastActiveNavId) return; // nothing changed — skip DOM writes
+  lastActiveNavId = activeId;
+
   let activeEl = null;
   document.querySelectorAll('.nav-links a').forEach(a => {
     const href = (a.getAttribute('href') || '').replace('#', '');
@@ -273,13 +309,21 @@ function updateActiveNav() {
   });
   const navCta = document.querySelector('.nav-cta');
   if (navCta) navCta.classList.toggle('active', activeId === 'contacto');
-  // On mobile: scroll active link into view in the nav
-  if (activeEl && window.innerWidth <= 900) {
-    activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  if (activeEl && isMobileViewport()) {
+    centerNavLinkHorizontally(activeEl);
   }
-  currentSection = idx;
 }
-window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+/* Throttled to one read/write pass per animation frame — scroll fires far
+   more often than that, and getCurrentSectionIdx() reads layout
+   (offsetTop) for every tracked section, which is wasted work (and a
+   contributor to mobile jank) if run synchronously on every event. */
+let navUpdateQueued = false;
+window.addEventListener('scroll', () => {
+  if (navUpdateQueued) return;
+  navUpdateQueued = true;
+  requestAnimationFrame(() => { navUpdateQueued = false; updateActiveNav(); });
+}, { passive: true });
 document.addEventListener('DOMContentLoaded', updateActiveNav);
 
 /* Scroll reveal */
@@ -396,36 +440,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     });
   }
   document.addEventListener('DOMContentLoaded', init);
-})();
-
-/* ── Mobile: fix section inline styles ── */
-(function () {
-  var sectionIds = ['financiamiento', 'entrega', 'crecimiento', 'galeria', 'ubicacion', 'contacto'];
-  function fixSections() {
-    var isMobile = window.innerWidth <= 900;
-    sectionIds.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      if (isMobile) {
-        el.style.height = 'calc(100svh - 62px)';
-        el.style.minHeight = '0';
-        el.style.display = 'flex';
-        el.style.flexDirection = 'column';
-      } else {
-        el.style.minHeight = '100vh';
-        el.style.height = '';
-        el.style.display = 'flex';
-      }
-    });
-    // Also fix amenidades
-    var amen = document.querySelector('.amenidades');
-    if (amen) {
-      amen.style.minHeight = isMobile ? '0' : '100vh';
-      amen.style.display = isMobile ? 'block' : 'flex';
-    }
-  }
-  fixSections();
-  window.addEventListener('resize', fixSections);
 })();
 
 /* ── Map: iframe always visible, fallback only on explicit error ── */

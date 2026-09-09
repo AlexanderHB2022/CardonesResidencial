@@ -384,9 +384,9 @@
     font-size: 1.6rem; font-weight: 300; color: var(--warm-white); margin-bottom: 1rem;
   }
   .contacto-info p { font-size: 14px; color: var(--sand); line-height: 1.8; font-weight: 300; margin-bottom: 1rem; }
-  .contacto-form { display: flex; flex-direction: column; gap: 1rem; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .contacto-form { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; min-width: 0; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
   .form-group label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
   .form-group input, .form-group select, .form-group textarea {
     background: rgba(212,197,169,0.08);
@@ -394,6 +394,7 @@
     color: var(--warm-white); padding: 0.8rem 1rem; font-size: 14px;
     font-family: "Jost"; outline: none; transition: border-color 0.3s;
     appearance: none;
+    width: 100%; min-width: 0;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     border-color: var(--accent);
@@ -460,14 +461,19 @@
     .hero-actions { flex-direction: column; align-items: flex-start; gap: 0.6rem; margin-top: 1rem; }
     .btn-primary, .btn-ghost { padding: 0.75rem 1.5rem; font-size: 11px; }
 
-    /* ─ ALL SECTIONS: fit in one screen ─ */
+    /* ─ ALL SECTIONS: one screen when content fits, grows naturally when it
+       doesn't ─ min-height (not height) + no overflow:hidden, so a section
+       whose real content is taller than the viewport pushes the page down
+       instead of clipping. justify-content:flex-start (not center) keeps
+       the top of a tall section anchored right below the nav instead of
+       spilling equally off both edges. */
     section {
-      height: calc(100svh - 62px);
-      min-height: 0;
-      overflow: hidden;
+      min-height: calc(100svh - 62px);
+      height: auto;
+      overflow: visible;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 1.4rem 1.2rem;
       box-sizing: border-box;
     }
@@ -489,7 +495,6 @@
     .feature-desc { font-size: 9px; margin-top: 2px; }
 
     /* ─ PLAN MAESTRO ─ */
-    #plan-maestro { min-height: 0; }
     .plan-maestro-frame { order: -1; justify-content: center; }
     .plan-maestro-card::after { display: none; }
     .plan-maestro-card { padding: 0.3rem; }
@@ -507,7 +512,6 @@
     .plan-maestro-grid .btn-primary { padding: 0.65rem 1.4rem; font-size: 10px; }
 
     /* ─ AMENIDADES ─ */
-    .amenidades { min-height: 0; }
     .amenidades-grid { grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 0.8rem; }
     .amenidad { padding: 0.8rem 0.7rem; border-top-width: 1.5px; }
     .amenidad-icon { margin-bottom: 0.4rem; }
@@ -516,14 +520,12 @@
     .amenidad-desc { font-size: 10px; line-height: 1.4; }
 
     /* ─ GALERÍA ─ */
-    #galeria { min-height: 0; }
     .galeria-strip {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto;
       gap: 3px;
       margin-top: 0.8rem;
-      flex: 1; min-height: 0;
     }
     .gal-item:first-child { grid-column: 1 / 3; }
     .gal-item { overflow: hidden; }
@@ -535,7 +537,7 @@
     .galeria-strip-2 .gal-item img { height: 46vw; }
 
     /* ─ FINANCIAMIENTO ─ */
-    #financiamiento { min-height: 0; padding-top: calc(62px + 0.8rem) !important; padding-bottom: 0.8rem !important; }
+    #financiamiento { padding-top: calc(62px + 0.8rem); padding-bottom: 0.8rem; }
     .fin-highlights { grid-template-columns: repeat(4, 1fr); gap: 0.3rem; margin-top: 0.5rem; padding-bottom: 0.5rem; }
     .fin-highlight-num { font-size: 1rem; }
     .fin-highlight-label { font-size: 7px; margin-top: 2px; }
@@ -544,31 +546,29 @@
     .fin-plan-name { font-size: 9px; margin-bottom: 0.2rem; }
     .fin-plan-desc { font-size: 9px; margin-bottom: 0.2rem; }
     .fin-plan-term { font-size: 1.05rem; }
-    .fin-table-wrap { margin-top: 0.7rem; flex: 1; min-height: 0; overflow-y: auto; }
+    .fin-table-wrap { margin-top: 0.7rem; }
     .fin-table { font-size: 10px; }
     .fin-table th, .fin-table td { padding: 0.35rem 0.5rem; }
     .fin-note { font-size: 9px; margin-top: 0.4rem; }
 
     /* ─ ENTREGA Y CERTEZA JURÍDICA ─ */
-    #entrega { min-height: 0; }
     .entrega-grid { grid-template-columns: 1fr; gap: 0.8rem; margin-top: 0.8rem; }
     .entrega-name { font-size: 1.05rem; }
     .entrega-item .divider { margin: 0.4rem 0; }
     .entrega-item p { font-size: 11px; line-height: 1.5; }
 
     /* ─ CRECIMIENTO ─ */
-    #crecimiento { min-height: 0; justify-content: flex-start; padding-top: 1.8rem; }
+    #crecimiento { padding-top: 1.8rem; }
     .crecimiento-stats { gap: 1.2rem; margin-top: 0.6rem; }
 
     /* ─ UBICACIÓN ─ */
-    #ubicacion { min-height: 0; background: var(--charcoal2); justify-content: flex-start; padding-top: 1.8rem; }
+    #ubicacion { background: var(--charcoal2); padding-top: 1.8rem; }
     .ubicacion-grid { grid-template-columns: 1fr; gap: 0.8rem; display: grid; }
     .map-container { height: 300px; }
     .location-details p { font-size: 11px; line-height: 1.5; margin-bottom: 0.5rem; }
     .location-list li { font-size: 10px; padding: 0.35rem 0; gap: 0.5rem; }
 
     /* ─ CONTACTO ─ */
-    .contacto { min-height: 0; }
     .contacto-grid { grid-template-columns: 1fr; gap: 0.7rem; display: grid; }
     .contacto-info h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
     .contacto-info p { font-size: 11px; line-height: 1.4; margin-bottom: 0.3rem; }
@@ -755,7 +755,7 @@
     nav {
       flex-wrap: nowrap;
       gap: 0;
-      padding: 0.75rem 1rem;
+      padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.75rem max(1rem, env(safe-area-inset-left));
       align-items: center;
       overscroll-behavior-x: contain;
       touch-action: pan-y;
